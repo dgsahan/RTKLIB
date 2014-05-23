@@ -713,6 +713,7 @@ static int antpos(prcopt_t *opt, int rcvno, const obs_t *obs, const nav_t *nav,
     return 1;
 }
 /* open procssing session ----------------------------------------------------*/
+/*basicaly it checks the required parameters are achieved*/
 static int openses(const prcopt_t *popt, const solopt_t *sopt,
                    const filopt_t *fopt, nav_t *nav, pcvs_t *pcvs, pcvs_t *pcvr)
 {
@@ -732,7 +733,7 @@ static int openses(const prcopt_t *popt, const solopt_t *sopt,
         trace(1,"rec antenna pcv read error: %s\n",fopt->rcvantp);
         return 0;
     }
-    /* read dcb parameters */
+    /* read dcb parameters, read differential code bias (dcb) parameters*/
     if (*fopt->dcb) {
         readdcb(fopt->dcb,nav);
     }
@@ -1133,12 +1134,13 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
     trace(3,"postpos : ti=%.0f tu=%.0f n=%d outfile=%s\n",ti,tu,n,outfile);
     
     /* open processing session */
+    //to be clarified
     if (!openses(popt,sopt,fopt,&navs,&pcvss,&pcvsr)) return -1;
     
     if (ts.time!=0&&te.time!=0&&tu>=0.0) {
         if (timediff(te,ts)<0.0) {
             showmsg("error : no period");
-            closeses(&navs,&pcvss,&pcvsr);
+            closeses(&navs,&pcvss,&pcvsr);//free meomries
             return 0;
         }
         for (i=0;i<MAXINFILE;i++) {
@@ -1148,7 +1150,7 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
                 return -1;
             }
         }
-        if (tu==0.0||tu>86400.0*MAXPRCDAYS) tu=86400.0*MAXPRCDAYS;
+        if (tu==0.0||tu>86400.0*MAXPRCDAYS) tu=86400.0*MAXPRCDAYS;//86400=24hrs
         settspan(ts,te);
         tunit=tu<86400.0?tu:86400.0;
         tss=tunit*(int)floor(time2gpst(ts,&week)/tunit);
