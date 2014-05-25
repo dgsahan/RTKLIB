@@ -1143,6 +1143,8 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
             closeses(&navs,&pcvss,&pcvsr);//close processing and free the memories
             return 0;
         }
+
+        //this for loop is searching meomory block for 1000 files and if not possible free all momories
         for (i=0;i<MAXINFILE;i++) {//maxinfile = 1000
             if (!(ifile[i]=(char *)malloc(1024))) {//if malloc returns null go inside
                 for (;i>=0;i--) free(ifile[i]);
