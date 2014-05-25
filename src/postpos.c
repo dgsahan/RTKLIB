@@ -1134,17 +1134,17 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
     trace(3,"postpos : ti=%.0f tu=%.0f n=%d outfile=%s\n",ti,tu,n,outfile);
     
     /* open processing session */
-    //to be clarified
+    //This function make sure that all the required variable can be read
     if (!openses(popt,sopt,fopt,&navs,&pcvss,&pcvsr)) return -1;
     
-    if (ts.time!=0&&te.time!=0&&tu>=0.0) {
+    if (ts.time!=0&&te.time!=0&&tu>=0.0) {//the longer bracket opens
         if (timediff(te,ts)<0.0) {
             showmsg("error : no period");
-            closeses(&navs,&pcvss,&pcvsr);//free meomries
+            closeses(&navs,&pcvss,&pcvsr);//close processing and free the memories
             return 0;
         }
-        for (i=0;i<MAXINFILE;i++) {
-            if (!(ifile[i]=(char *)malloc(1024))) {
+        for (i=0;i<MAXINFILE;i++) {//maxinfile = 1000
+            if (!(ifile[i]=(char *)malloc(1024))) {//if malloc returns null go inside
                 for (;i>=0;i--) free(ifile[i]);
                 closeses(&navs,&pcvss,&pcvsr);
                 return -1;
