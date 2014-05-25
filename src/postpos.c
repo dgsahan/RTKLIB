@@ -1152,6 +1152,7 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
                 return -1;
             }
         }
+        /*MAXPRCDAYS= max days of continuous processing */
         if (tu==0.0||tu>86400.0*MAXPRCDAYS) tu=86400.0*MAXPRCDAYS;//86400=24hrs
         settspan(ts,te);
         tunit=tu<86400.0?tu:86400.0;
