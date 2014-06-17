@@ -1156,9 +1156,10 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
         if (tu==0.0||tu>86400.0*MAXPRCDAYS) tu=86400.0*MAXPRCDAYS;//86400=24hrs
         settspan(ts,te);
         tunit=tu<86400.0?tu:86400.0;
+        //floor function will return the largest integer value of not greater than x
         tss=tunit*(int)floor(time2gpst(ts,&week)/tunit);
         
-        for (i=0;;i++) { /* for each periods */
+        for (i=0;;i++) { /* for each periods , long bracket inside the brackets*/
             tts=gpst2time(week,tss+i*tu);
             tte=timeadd(tts,tu-DTTOL);
             if (timediff(tts,te)>0.0) break;
@@ -1173,7 +1174,7 @@ extern int postpos(gtime_t ts, gtime_t te, double ti, double tu,
             }
             for (j=k=nf=0;j<n;j++) {
                 
-                ext=strrchr(infile[j],'.');
+                ext=strrchr(infile[j],'.');//check for the last occurrence,ext will have the remain characters after .
                 
                 if (ext&&(!strcmp(ext,".rtcm3")||!strcmp(ext,".RTCM3"))) {
                     strcpy(ifile[nf++],infile[j]);
